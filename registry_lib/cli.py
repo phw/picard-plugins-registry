@@ -11,7 +11,8 @@ from registry_lib.registry import Registry
 def cmd_plugin_add(args):
     """Add plugin to registry."""
     registry = Registry(args.registry)
-    plugin = add_plugin(registry, args.url, args.trust, categories=args.categories, ref=args.ref)
+    categories = args.categories.split(',') if args.categories else None
+    plugin = add_plugin(registry, args.url, args.trust, categories=categories, ref=args.ref)
     registry.save()
     print(f"Added plugin: {plugin['name']} ({plugin['id']})")
 
@@ -79,7 +80,7 @@ def main():
     add_parser = plugin_subparsers.add_parser("add", help="Add plugin")
     add_parser.add_argument("url", help="Git repository URL")
     add_parser.add_argument("--trust", required=True, choices=["official", "trusted", "community"], help="Trust level")
-    add_parser.add_argument("--categories", nargs="+", help="Plugin categories")
+    add_parser.add_argument("--categories", help="Plugin categories (comma-separated)")
     add_parser.add_argument("--ref", default="main", help="Git ref (default: main)")
     add_parser.set_defaults(func=cmd_plugin_add)
 

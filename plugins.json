@@ -1,6 +1,23 @@
 {
   "api_version": "3.0",
-  "last_updated": "2025-12-01T10:09:23.168259+00:00",
-  "plugins": [],
+  "last_updated": "2025-12-01T10:29:08.436808+00:00",
+  "plugins": [
+    {
+      "id": "additional-artists-details",
+      "uuid": "81fd1f5f-f723-498f-a82e-17fb4163c83a",
+      "name": "Additional Artists Details",
+      "description": "This plugin provides specialized album and track variables with artist details for use in tagging and naming scripts.\n",
+      "git_url": "https://github.com/rdswift/picard-plugin-additional-artists-details",
+      "categories": [
+        "metadata"
+      ],
+      "trust_level": "trusted",
+      "authors": [
+        "Bob Swift"
+      ],
+      "added_at": "2025-12-01T10:29:08.436743+00:00",
+      "updated_at": "2025-12-01T10:29:08.436743+00:00"
+    }
+  ],
   "blacklist": []
 }

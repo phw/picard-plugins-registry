@@ -36,7 +36,7 @@ source .venv/bin/activate
 ```bash
 uv run registry plugin add https://github.com/user/plugin-name \
     --trust community \
-    --categories metadata coverart
+    --categories metadata,coverart
 
 # With custom git ref
 uv run registry plugin add https://github.com/user/plugin-name \
