@@ -62,3 +62,53 @@ def add_plugin(registry, git_url, trust_level, categories=None, ref="main"):
 
     registry.add_plugin(plugin)
     return plugin
+
+
+def update_plugin(registry, plugin_id):
+    """Update plugin metadata from MANIFEST.
+
+    Args:
+        registry: Registry instance
+        plugin_id: Plugin ID to update
+
+    Returns:
+        dict: Updated plugin entry
+
+    Raises:
+        ValueError: If plugin not found or validation fails
+    """
+    plugin = registry.find_plugin(plugin_id)
+    if not plugin:
+        raise ValueError(f"Plugin {plugin_id} not found")
+
+    # Get ref (default to main if not specified)
+    refs = plugin.get("refs", [{"name": "main"}])
+    ref = refs[0]["name"]
+
+    # Fetch and validate manifest
+    manifest = fetch_manifest(plugin["git_url"], ref)
+    validate_manifest(manifest)
+
+    # Update fields from manifest
+    plugin["name"] = manifest["name"]
+    plugin["description"] = manifest["description"]
+    plugin["authors"] = manifest.get("authors", [])
+    plugin["updated_at"] = datetime.now(timezone.utc).isoformat()
+
+    # Update optional fields
+    if "maintainers" in manifest:
+        plugin["maintainers"] = manifest["maintainers"]
+    elif "maintainers" in plugin:
+        del plugin["maintainers"]
+
+    if "name_i18n" in manifest:
+        plugin["name_i18n"] = manifest["name_i18n"]
+    elif "name_i18n" in plugin:
+        del plugin["name_i18n"]
+
+    if "description_i18n" in manifest:
+        plugin["description_i18n"] = manifest["description_i18n"]
+    elif "description_i18n" in plugin:
+        del plugin["description_i18n"]
+
+    return plugin

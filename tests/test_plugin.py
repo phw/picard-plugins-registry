@@ -104,3 +104,36 @@ def test_add_plugin_duplicate(mock_fetch, temp_registry):
 
     with pytest.raises(ValueError, match="already exists"):
         add_plugin(temp_registry, "https://github.com/user/test-plugin", "community")
+
+
+@patch("registry_lib.plugin.fetch_manifest")
+def test_update_plugin(mock_fetch, temp_registry):
+    """Test updating plugin metadata."""
+    # Add plugin first
+    mock_fetch.return_value = {
+        "uuid": "12345678-1234-4234-8234-123456789abc",
+        "name": "Test Plugin",
+        "version": "1.0.0",
+        "description": "Old description",
+        "api": ["3.0"],
+        "authors": ["Old Author"],
+    }
+    add_plugin(temp_registry, "https://github.com/user/test-plugin", "community")
+
+    # Update with new manifest
+    mock_fetch.return_value = {
+        "uuid": "12345678-1234-4234-8234-123456789abc",
+        "name": "Test Plugin Updated",
+        "version": "2.0.0",
+        "description": "New description",
+        "api": ["3.0"],
+        "authors": ["New Author"],
+    }
+
+    from registry_lib.plugin import update_plugin
+
+    plugin = update_plugin(temp_registry, "test-plugin")
+
+    assert plugin["name"] == "Test Plugin Updated"
+    assert plugin["description"] == "New description"
+    assert plugin["authors"] == ["New Author"]

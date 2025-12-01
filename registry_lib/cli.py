@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import sys
 
 from registry_lib.blacklist import add_blacklist
-from registry_lib.plugin import add_plugin
+from registry_lib.plugin import add_plugin, update_plugin
 from registry_lib.registry import Registry
 
 
@@ -88,6 +88,14 @@ def cmd_plugin_add(args):
     print(f"Added plugin: {plugin['name']} ({plugin['id']})")
 
 
+def cmd_plugin_update(args):
+    """Update plugin metadata from MANIFEST."""
+    registry = Registry(args.registry)
+    plugin = update_plugin(registry, args.plugin_id)
+    registry.save()
+    print(f"Updated plugin: {plugin['name']} ({plugin['id']})")
+
+
 def cmd_plugin_remove(args):
     """Remove plugin from registry."""
     registry = Registry(args.registry)
@@ -154,6 +162,11 @@ def main():
     add_parser.add_argument("--categories", help="Plugin categories (comma-separated)")
     add_parser.add_argument("--ref", default="main", help="Git ref (default: main)")
     add_parser.set_defaults(func=cmd_plugin_add)
+
+    # plugin update
+    update_parser = plugin_subparsers.add_parser("update", help="Update plugin metadata from MANIFEST")
+    update_parser.add_argument("plugin_id", help="Plugin ID")
+    update_parser.set_defaults(func=cmd_plugin_update)
 
     # plugin edit
     edit_parser = plugin_subparsers.add_parser("edit", help="Edit plugin")
