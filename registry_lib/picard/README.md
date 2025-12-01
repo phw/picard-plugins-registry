@@ -15,7 +15,7 @@ Copied from: https://github.com/metabrainz/picard
 
 ## Maintenance
 
-These files should be copied **without modification**. If changes are needed, make them in the Picard repository first, then copy the updated files here.
+These files are copied **without modification** from the Picard repository. The relative imports (`.constants`) work in both contexts.
 
 To update:
 ```bash
