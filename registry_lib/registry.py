@@ -33,6 +33,8 @@ class Registry:
     def save(self):
         """Save registry to file."""
         self.data["last_updated"] = now_iso8601()
+        # Sort plugins by ID for consistent ordering
+        self.data["plugins"] = sorted(self.data["plugins"], key=lambda p: p["id"])
         with open(self.path, "w") as f:
             json.dump(self.data, f, indent=2, ensure_ascii=False)
             f.write("\n")

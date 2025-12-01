@@ -149,7 +149,8 @@ def cmd_plugin_remove(args):
 def cmd_plugin_list(args):
     """List plugins in registry."""
     registry = Registry(args.registry)
-    for i, plugin in enumerate(registry.data["plugins"]):
+    plugins = sorted(registry.data["plugins"], key=lambda p: p["id"])
+    for i, plugin in enumerate(plugins):
         if args.verbose:
             if i > 0:
                 print()  # Blank line between plugins
