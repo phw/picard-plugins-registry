@@ -5,6 +5,21 @@ from registry_lib.picard.constants import REGISTRY_TRUST_LEVELS
 from registry_lib.utils import derive_plugin_id, now_iso8601
 
 
+def _sync_optional_fields(plugin, manifest, fields):
+    """Sync optional fields from manifest to plugin.
+
+    Args:
+        plugin: Plugin dict to update
+        manifest: Manifest dict to read from
+        fields: List of field names to sync
+    """
+    for field in fields:
+        if field in manifest:
+            plugin[field] = manifest[field]
+        elif field in plugin:
+            del plugin[field]
+
+
 def add_plugin(registry, git_url, trust_level, categories=None, refs=None):
     """Add plugin to registry.
 
@@ -65,12 +80,7 @@ def add_plugin(registry, git_url, trust_level, categories=None, refs=None):
     }
 
     # Add optional fields
-    if "maintainers" in manifest:
-        plugin["maintainers"] = manifest["maintainers"]
-    if "name_i18n" in manifest:
-        plugin["name_i18n"] = manifest["name_i18n"]
-    if "description_i18n" in manifest:
-        plugin["description_i18n"] = manifest["description_i18n"]
+    _sync_optional_fields(plugin, manifest, ["maintainers", "name_i18n", "description_i18n"])
 
     # Add refs if not default single main
     if not (len(refs_list) == 1 and refs_list[0]["name"] == "main" and "min_api_version" not in refs_list[0]):
@@ -156,19 +166,6 @@ def update_plugin(registry, plugin_id, ref=None):
     plugin["updated_at"] = now_iso8601()
 
     # Update optional fields
-    if "maintainers" in manifest:
-        plugin["maintainers"] = manifest["maintainers"]
-    elif "maintainers" in plugin:
-        del plugin["maintainers"]
-
-    if "name_i18n" in manifest:
-        plugin["name_i18n"] = manifest["name_i18n"]
-    elif "name_i18n" in plugin:
-        del plugin["name_i18n"]
-
-    if "description_i18n" in manifest:
-        plugin["description_i18n"] = manifest["description_i18n"]
-    elif "description_i18n" in plugin:
-        del plugin["description_i18n"]
+    _sync_optional_fields(plugin, manifest, ["maintainers", "name_i18n", "description_i18n"])
 
     return plugin
