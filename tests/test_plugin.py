@@ -75,6 +75,27 @@ def test_add_plugin_with_i18n(mock_fetch, temp_registry):
 
 
 @patch("registry_lib.plugin.fetch_manifest")
+def test_add_plugin_with_multi_refs(mock_fetch, temp_registry):
+    """Test adding plugin with multiple refs."""
+    mock_fetch.return_value = {
+        "uuid": "12345678-1234-4234-8234-123456789abc",
+        "name": "Test Plugin",
+        "version": "1.0.0",
+        "description": "A test plugin",
+        "api": ["3.0"],
+    }
+
+    plugin = add_plugin(
+        temp_registry, "https://github.com/user/test-plugin", "community", refs="main:4.0,picard-v3:3.0-3.99"
+    )
+
+    assert "refs" in plugin
+    assert len(plugin["refs"]) == 2
+    assert plugin["refs"][0] == {"name": "main", "min_api_version": "4.0"}
+    assert plugin["refs"][1] == {"name": "picard-v3", "min_api_version": "3.0", "max_api_version": "3.99"}
+
+
+@patch("registry_lib.plugin.fetch_manifest")
 def test_add_plugin_invalid_trust_level(mock_fetch, temp_registry):
     """Test adding plugin with invalid trust level."""
     mock_fetch.return_value = {

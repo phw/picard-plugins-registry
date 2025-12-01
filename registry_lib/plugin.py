@@ -5,7 +5,7 @@ from registry_lib.picard.constants import REGISTRY_TRUST_LEVELS
 from registry_lib.utils import derive_plugin_id, now_iso8601
 
 
-def add_plugin(registry, git_url, trust_level, categories=None, ref="main"):
+def add_plugin(registry, git_url, trust_level, categories=None, refs=None):
     """Add plugin to registry.
 
     Args:
@@ -13,7 +13,8 @@ def add_plugin(registry, git_url, trust_level, categories=None, ref="main"):
         git_url: Git repository URL
         trust_level: Trust level (official, trusted, community)
         categories: List of categories (optional)
-        ref: Git ref to use (default: main)
+        refs: Comma-separated refs with optional API versions (e.g., "main:4.0,picard-v3:3.0-3.99")
+              or None for default "main"
 
     Returns:
         dict: Added plugin entry
@@ -24,8 +25,14 @@ def add_plugin(registry, git_url, trust_level, categories=None, ref="main"):
     if trust_level not in REGISTRY_TRUST_LEVELS:
         raise ValueError(f"Invalid trust level: {trust_level}")
 
-    # Fetch and validate manifest
-    manifest = fetch_manifest(git_url, ref)
+    # Parse refs
+    if refs:
+        refs_list = _parse_refs(refs)
+    else:
+        refs_list = [{"name": "main"}]
+
+    # Fetch and validate manifest from first ref (default ref)
+    manifest = fetch_manifest(git_url, refs_list[0]["name"])
     validate_manifest(manifest)
 
     # Derive plugin ID
@@ -54,12 +61,48 @@ def add_plugin(registry, git_url, trust_level, categories=None, ref="main"):
     if "description_i18n" in manifest:
         plugin["description_i18n"] = manifest["description_i18n"]
 
-    # Add refs if not default
-    if ref != "main":
-        plugin["refs"] = [{"name": ref}]
+    # Add refs if not default single main
+    if not (len(refs_list) == 1 and refs_list[0]["name"] == "main" and "min_api_version" not in refs_list[0]):
+        plugin["refs"] = refs_list
 
     registry.add_plugin(plugin)
     return plugin
+
+
+def _parse_refs(refs_str):
+    """Parse refs string.
+
+    Formats:
+    - "main" - single ref
+    - "main,beta" - multiple refs
+    - "main:4.0" - ref with min API version
+    - "main:4.0-4.99" - ref with min and max API versions
+    - "main:4.0,picard-v3:3.0-3.99" - multiple refs with versions
+
+    Args:
+        refs_str: Comma-separated refs string
+
+    Returns:
+        list: List of ref dicts with name and optional API versions
+    """
+    refs = []
+    for ref_spec in refs_str.split(','):
+        ref_spec = ref_spec.strip()
+        if ':' in ref_spec:
+            # Format: name:api_version or name:min-max
+            name, api_spec = ref_spec.split(':', 1)
+            ref = {"name": name.strip()}
+            if '-' in api_spec:
+                min_api, max_api = api_spec.split('-', 1)
+                ref["min_api_version"] = min_api.strip()
+                ref["max_api_version"] = max_api.strip()
+            else:
+                ref["min_api_version"] = api_spec.strip()
+        else:
+            # Simple format: just name
+            ref = {"name": ref_spec}
+        refs.append(ref)
+    return refs
 
 
 def update_plugin(registry, plugin_id):

@@ -1,6 +1,6 @@
 {
   "api_version": "3.0",
-  "last_updated": "2025-12-01T11:12:44Z",
+  "last_updated": "2025-12-01T11:16:37Z",
   "plugins": [
     {
       "id": "additional-artists-details",
@@ -11,15 +11,12 @@
       "categories": [
         "metadata"
       ],
-      "trust_level": "trusted",
+      "trust_level": "official",
       "authors": [
         "Bob Swift"
       ],
-      "added_at": "2025-12-01T10:45:20Z",
-      "updated_at": "2025-12-01T11:02:19Z",
-      "redirect_from": [
-        "https://github.com/olduser/old-plugin"
-      ]
+      "added_at": "2025-12-01T11:16:37Z",
+      "updated_at": "2025-12-01T11:16:37Z"
     }
   ],
   "blacklist": []

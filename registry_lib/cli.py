@@ -125,7 +125,7 @@ def cmd_plugin_add(args):
     """Add plugin to registry."""
     registry = Registry(args.registry)
     categories = args.categories.split(',') if args.categories else None
-    plugin = add_plugin(registry, args.url, args.trust, categories=categories, ref=args.ref)
+    plugin = add_plugin(registry, args.url, args.trust, categories=categories, refs=args.refs)
     registry.save()
     print(f"Added plugin: {plugin['name']} ({plugin['id']})")
 
@@ -284,7 +284,10 @@ def main():
     add_parser.add_argument("url", help="Git repository URL")
     add_parser.add_argument("--trust", required=True, choices=["official", "trusted", "community"], help="Trust level")
     add_parser.add_argument("--categories", help="Plugin categories (comma-separated)")
-    add_parser.add_argument("--ref", default="main", help="Git ref (default: main)")
+    add_parser.add_argument(
+        "--refs",
+        help="Git refs (comma-separated, with optional API versions, e.g., 'main:4.0,picard-v3:3.0-3.99'). Default: main",
+    )
     add_parser.set_defaults(func=cmd_plugin_add)
 
     # plugin update
