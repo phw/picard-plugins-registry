@@ -4,6 +4,7 @@ import argparse
 import sys
 
 from registry_lib.blacklist import add_blacklist
+from registry_lib.picard.constants import REGISTRY_TRUST_LEVELS
 from registry_lib.plugin import DEFAULT_REF, add_plugin, update_plugin
 from registry_lib.registry import Registry
 from registry_lib.utils import now_iso8601
@@ -422,7 +423,12 @@ def main():
     # plugin add
     add_parser = plugin_subparsers.add_parser("add", help="Add plugin")
     add_parser.add_argument("url", help="Git repository URL")
-    add_parser.add_argument("--trust", required=True, choices=["official", "trusted", "community"], help="Trust level")
+    add_parser.add_argument(
+        "--trust",
+        default=REGISTRY_TRUST_LEVELS[-1],
+        choices=REGISTRY_TRUST_LEVELS,
+        help=f"Trust level (default: {REGISTRY_TRUST_LEVELS[-1]})",
+    )
     add_parser.add_argument("--categories", help="Plugin categories (comma-separated)")
     add_parser.add_argument(
         "--refs",
@@ -439,7 +445,7 @@ def main():
     # plugin edit
     edit_parser = plugin_subparsers.add_parser("edit", help="Edit plugin")
     edit_parser.add_argument("plugin_id", help="Plugin ID")
-    edit_parser.add_argument("--trust", choices=["official", "trusted", "community"], help="Trust level")
+    edit_parser.add_argument("--trust", choices=REGISTRY_TRUST_LEVELS, help="Trust level")
     edit_parser.add_argument("--categories", help="Plugin categories (comma-separated)")
     edit_parser.add_argument("--git-url", help="Git repository URL")
     edit_parser.set_defaults(func=cmd_plugin_edit)
@@ -460,7 +466,7 @@ def main():
     # plugin list
     list_parser = plugin_subparsers.add_parser("list", help="List plugins")
     list_parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed information")
-    list_parser.add_argument("--trust", choices=["official", "trusted", "community"], help="Filter by trust level")
+    list_parser.add_argument("--trust", choices=REGISTRY_TRUST_LEVELS, help="Filter by trust level")
     list_parser.add_argument("--category", help="Filter by category")
     list_parser.set_defaults(func=cmd_plugin_list)
 
