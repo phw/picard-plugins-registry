@@ -23,13 +23,13 @@
 import re
 
 # Trust levels that appear in registry JSON
-REGISTRY_TRUST_LEVELS = ["official", "trusted", "community"]
+REGISTRY_TRUST_LEVELS = ['official', 'trusted', 'community']
 
 # Plugin categories
-CATEGORIES = ["metadata", "coverart", "ui", "scripting", "formats", "other"]
+CATEGORIES = ['metadata', 'coverart', 'ui', 'scripting', 'formats', 'other']
 
 # Required MANIFEST.toml fields
-REQUIRED_MANIFEST_FIELDS = ["uuid", "name", "version", "description", "api"]
+REQUIRED_MANIFEST_FIELDS = ['uuid', 'name', 'version', 'description', 'api']
 
 # String length constraints for MANIFEST.toml fields
 MAX_NAME_LENGTH = 100
@@ -37,4 +37,4 @@ MAX_DESCRIPTION_LENGTH = 200
 MAX_LONG_DESCRIPTION_LENGTH = 2000
 
 # UUID v4 regex pattern (RFC 4122)
-UUID_PATTERN = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$", re.IGNORECASE)
+UUID_PATTERN = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', re.IGNORECASE)
