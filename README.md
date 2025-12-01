@@ -41,7 +41,12 @@ registry plugin add https://github.com/user/plugin-name \
 # With custom git ref
 registry plugin add https://github.com/user/plugin-name \
     --trust community \
-    --ref develop
+    --refs develop
+
+# With multiple refs for different Picard versions
+registry plugin add https://github.com/user/plugin-name \
+    --trust community \
+    --refs 'main:4.0,picard-v3:3.0-3.99'
 ```
 
 ### Update Plugin Metadata
