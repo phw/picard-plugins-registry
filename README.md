@@ -44,6 +44,19 @@ uv run registry plugin add https://github.com/user/plugin-name \
     --ref develop
 ```
 
+### Edit a Plugin
+
+```bash
+# Change trust level
+uv run registry plugin edit plugin-id --trust official
+
+# Change categories
+uv run registry plugin edit plugin-id --categories metadata,ui
+
+# Change both
+uv run registry plugin edit plugin-id --trust trusted --categories metadata
+```
+
 ### List Plugins
 
 ```bash

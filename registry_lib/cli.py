@@ -1,11 +1,31 @@
 """Command-line interface."""
 
 import argparse
+from datetime import datetime, timezone
 import sys
 
 from registry_lib.blacklist import add_blacklist
 from registry_lib.plugin import add_plugin
 from registry_lib.registry import Registry
+
+
+def cmd_plugin_edit(args):
+    """Edit plugin in registry."""
+    registry = Registry(args.registry)
+    plugin = registry.find_plugin(args.plugin_id)
+    if not plugin:
+        print(f"Error: Plugin {args.plugin_id} not found", file=sys.stderr)
+        sys.exit(1)
+
+    # Update fields if provided
+    if args.trust:
+        plugin["trust_level"] = args.trust
+    if args.categories:
+        plugin["categories"] = args.categories.split(',')
+
+    plugin["updated_at"] = datetime.now(timezone.utc).isoformat()
+    registry.save()
+    print(f"Updated plugin: {plugin['name']} ({plugin['id']})")
 
 
 def cmd_plugin_add(args):
@@ -83,6 +103,13 @@ def main():
     add_parser.add_argument("--categories", help="Plugin categories (comma-separated)")
     add_parser.add_argument("--ref", default="main", help="Git ref (default: main)")
     add_parser.set_defaults(func=cmd_plugin_add)
+
+    # plugin edit
+    edit_parser = plugin_subparsers.add_parser("edit", help="Edit plugin")
+    edit_parser.add_argument("plugin_id", help="Plugin ID")
+    edit_parser.add_argument("--trust", choices=["official", "trusted", "community"], help="Trust level")
+    edit_parser.add_argument("--categories", help="Plugin categories (comma-separated)")
+    edit_parser.set_defaults(func=cmd_plugin_edit)
 
     # plugin remove
     remove_parser = plugin_subparsers.add_parser("remove", help="Remove plugin")

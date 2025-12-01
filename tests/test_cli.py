@@ -38,3 +38,16 @@ def test_cli_plugin_add(mock_registry, mock_add_plugin):
 
     mock_add_plugin.assert_called_once()
     mock_registry.return_value.save.assert_called_once()
+
+
+@patch("sys.argv", ["registry", "plugin", "edit", "test-plugin", "--trust", "official"])
+@patch("registry_lib.cli.Registry")
+def test_cli_plugin_edit(mock_registry):
+    """Test plugin edit command."""
+    mock_plugin = {"id": "test-plugin", "name": "Test Plugin", "trust_level": "community"}
+    mock_registry.return_value.find_plugin.return_value = mock_plugin
+
+    main()
+
+    assert mock_plugin["trust_level"] == "official"
+    mock_registry.return_value.save.assert_called_once()
