@@ -66,6 +66,32 @@ def test_cli_plugin_add(mock_registry, mock_add_plugin):
     mock_registry.return_value.save.assert_called_once()
 
 
+@patch(
+    "sys.argv",
+    [
+        "registry",
+        "plugin",
+        "add",
+        "https://github.com/user/plugin",
+        "--trust",
+        "community",
+        "--versioning-scheme",
+        "semver",
+    ],
+)
+@patch("registry_lib.cli.add_plugin")
+@patch("registry_lib.cli.Registry")
+def test_cli_plugin_add_with_versioning_scheme(mock_registry, mock_add_plugin):
+    """Test plugin add command with versioning scheme."""
+    mock_add_plugin.return_value = {"id": "plugin", "name": "Plugin"}
+
+    main()
+
+    args = mock_add_plugin.call_args
+    assert args[1]["versioning_scheme"] == "semver"
+    mock_registry.return_value.save.assert_called_once()
+
+
 @patch("sys.argv", ["registry", "plugin", "edit", "test-plugin", "--trust", "official"])
 @patch("registry_lib.cli.Registry")
 def test_cli_plugin_edit(mock_registry):
@@ -76,6 +102,37 @@ def test_cli_plugin_edit(mock_registry):
     main()
 
     assert mock_plugin["trust_level"] == "official"
+    mock_registry.return_value.save.assert_called_once()
+
+
+@patch("sys.argv", ["registry", "plugin", "edit", "test-plugin", "--versioning-scheme", "semver"])
+@patch("registry_lib.cli.Registry")
+def test_cli_plugin_edit_versioning_scheme(mock_registry):
+    """Test plugin edit command with versioning scheme."""
+    mock_plugin = {"id": "test-plugin", "name": "Test Plugin", "trust_level": "community"}
+    mock_registry.return_value.find_plugin.return_value = mock_plugin
+
+    main()
+
+    assert mock_plugin["versioning_scheme"] == "semver"
+    mock_registry.return_value.save.assert_called_once()
+
+
+@patch("sys.argv", ["registry", "plugin", "edit", "test-plugin", "--versioning-scheme", ""])
+@patch("registry_lib.cli.Registry")
+def test_cli_plugin_edit_remove_versioning_scheme(mock_registry):
+    """Test plugin edit command removing versioning scheme."""
+    mock_plugin = {
+        "id": "test-plugin",
+        "name": "Test Plugin",
+        "trust_level": "community",
+        "versioning_scheme": "semver",
+    }
+    mock_registry.return_value.find_plugin.return_value = mock_plugin
+
+    main()
+
+    assert "versioning_scheme" not in mock_plugin
     mock_registry.return_value.save.assert_called_once()
 
 

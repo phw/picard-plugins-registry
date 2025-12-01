@@ -23,7 +23,7 @@ def _sync_optional_fields(plugin, manifest, fields):
             del plugin[field]
 
 
-def add_plugin(registry, git_url, trust_level, categories=None, refs=None):
+def add_plugin(registry, git_url, trust_level, categories=None, refs=None, versioning_scheme=None):
     """Add plugin to registry.
 
     Args:
@@ -33,6 +33,7 @@ def add_plugin(registry, git_url, trust_level, categories=None, refs=None):
         categories: List of categories (optional)
         refs: Comma-separated refs with optional API versions (e.g., "main:4.0,picard-v3:3.0-3.99")
               or None for default "main"
+        versioning_scheme: Version tagging scheme (semver, calver, or regex:<pattern>)
 
     Returns:
         dict: Added plugin entry
@@ -88,6 +89,10 @@ def add_plugin(registry, git_url, trust_level, categories=None, refs=None):
     # Add refs if not default single main
     if not (len(refs_list) == 1 and refs_list[0]["name"] == DEFAULT_REF and "min_api_version" not in refs_list[0]):
         plugin["refs"] = refs_list
+
+    # Add versioning_scheme if provided
+    if versioning_scheme:
+        plugin["versioning_scheme"] = versioning_scheme
 
     registry.add_plugin(plugin)
     return plugin

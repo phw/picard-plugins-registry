@@ -259,6 +259,11 @@ def cmd_plugin_edit(args):
         plugin["categories"] = args.categories.split(',')
     if args.git_url:
         plugin["git_url"] = args.git_url
+    if args.versioning_scheme is not None:
+        if args.versioning_scheme:
+            plugin["versioning_scheme"] = args.versioning_scheme
+        elif "versioning_scheme" in plugin:
+            del plugin["versioning_scheme"]
 
     plugin["updated_at"] = now_iso8601()
     registry.save()
@@ -269,7 +274,9 @@ def cmd_plugin_add(args):
     """Add plugin to registry."""
     registry = Registry(args.registry)
     categories = args.categories.split(',') if args.categories else None
-    plugin = add_plugin(registry, args.url, args.trust, categories=categories, refs=args.refs)
+    plugin = add_plugin(
+        registry, args.url, args.trust, categories=categories, refs=args.refs, versioning_scheme=args.versioning_scheme
+    )
     registry.save()
     print(f"Added plugin: {plugin['name']} ({plugin['id']})")
 
@@ -320,6 +327,8 @@ def cmd_plugin_list(args):
             print(f"Authors: {', '.join(plugin.get('authors', []))}")
             if 'maintainers' in plugin:
                 print(f"Maintainers: {', '.join(plugin['maintainers'])}")
+            if 'versioning_scheme' in plugin:
+                print(f"Versioning Scheme: {plugin['versioning_scheme']}")
             if 'redirect_from' in plugin:
                 print(f"Redirects from: {', '.join(plugin['redirect_from'])}")
             print(f"Added: {plugin['added_at']}")
@@ -343,6 +352,8 @@ def cmd_plugin_show(args):
     print(f"Authors: {', '.join(plugin.get('authors', []))}")
     if 'maintainers' in plugin:
         print(f"Maintainers: {', '.join(plugin['maintainers'])}")
+    if 'versioning_scheme' in plugin:
+        print(f"Versioning Scheme: {plugin['versioning_scheme']}")
     if 'redirect_from' in plugin:
         print(f"Redirects from: {', '.join(plugin['redirect_from'])}")
     print(f"Added: {plugin['added_at']}")
@@ -434,6 +445,11 @@ def main():
         "--refs",
         help="Git refs (comma-separated, with optional API versions, e.g., 'main:4.0,picard-v3:3.0-3.99'). Default: main",
     )
+    add_parser.add_argument(
+        "--versioning-scheme",
+        dest="versioning_scheme",
+        help="Version tagging scheme: 'semver', 'calver', or 'regex:<pattern>'",
+    )
     add_parser.set_defaults(func=cmd_plugin_add)
 
     # plugin update
@@ -448,6 +464,11 @@ def main():
     edit_parser.add_argument("--trust", choices=REGISTRY_TRUST_LEVELS, help="Trust level")
     edit_parser.add_argument("--categories", help="Plugin categories (comma-separated)")
     edit_parser.add_argument("--git-url", help="Git repository URL")
+    edit_parser.add_argument(
+        "--versioning-scheme",
+        dest="versioning_scheme",
+        help="Version tagging scheme: 'semver', 'calver', 'regex:<pattern>', or empty string to remove",
+    )
     edit_parser.set_defaults(func=cmd_plugin_edit)
 
     # plugin redirect

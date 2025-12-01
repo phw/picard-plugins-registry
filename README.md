@@ -47,6 +47,16 @@ registry plugin add https://github.com/user/plugin-name \
 registry plugin add https://github.com/user/plugin-name \
     --trust community \
     --refs 'main:4.0,picard-v3:3.0-3.99'
+
+# With semantic versioning (auto-discovers version tags)
+registry plugin add https://github.com/user/plugin-name \
+    --trust community \
+    --versioning-scheme semver
+
+# With custom version pattern
+registry plugin add https://github.com/user/plugin-name \
+    --trust community \
+    --versioning-scheme 'regex:^version\d+\.\d+\.\d+$'
 ```
 
 ### Update Plugin Metadata
@@ -74,6 +84,12 @@ registry plugin edit plugin-id --categories metadata,ui
 
 # Change git URL (when plugin permanently moves)
 registry plugin edit plugin-id --git-url https://github.com/newuser/new-repo
+
+# Add or change versioning scheme
+registry plugin edit plugin-id --versioning-scheme semver
+
+# Remove versioning scheme
+registry plugin edit plugin-id --versioning-scheme ""
 
 # Change multiple fields
 registry plugin edit plugin-id --trust trusted --categories metadata
