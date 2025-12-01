@@ -149,8 +149,26 @@ def cmd_plugin_remove(args):
 def cmd_plugin_list(args):
     """List plugins in registry."""
     registry = Registry(args.registry)
-    for plugin in registry.data["plugins"]:
-        print(f"{plugin['id']}: {plugin['name']} ({plugin['trust_level']})")
+    for i, plugin in enumerate(registry.data["plugins"]):
+        if args.verbose:
+            if i > 0:
+                print()  # Blank line between plugins
+            print(f"ID: {plugin['id']}")
+            print(f"Name: {plugin['name']}")
+            print(f"UUID: {plugin['uuid']}")
+            print(f"Description: {plugin['description']}")
+            print(f"URL: {plugin['git_url']}")
+            print(f"Trust Level: {plugin['trust_level']}")
+            print(f"Categories: {', '.join(plugin.get('categories', []))}")
+            print(f"Authors: {', '.join(plugin.get('authors', []))}")
+            if 'maintainers' in plugin:
+                print(f"Maintainers: {', '.join(plugin['maintainers'])}")
+            if 'redirect_from' in plugin:
+                print(f"Redirects from: {', '.join(plugin['redirect_from'])}")
+            print(f"Added: {plugin['added_at']}")
+            print(f"Updated: {plugin['updated_at']}")
+        else:
+            print(f"{plugin['id']}: {plugin['name']} ({plugin['trust_level']})")
 
 
 def cmd_plugin_show(args):
@@ -255,6 +273,7 @@ def main():
 
     # plugin list
     list_parser = plugin_subparsers.add_parser("list", help="List plugins")
+    list_parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed information")
     list_parser.set_defaults(func=cmd_plugin_list)
 
     # plugin show

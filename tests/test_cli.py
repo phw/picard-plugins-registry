@@ -16,6 +16,32 @@ def test_cli_plugin_list(mock_registry):
     mock_registry.assert_called_once_with("test.json")
 
 
+@patch("sys.argv", ["registry", "plugin", "list", "--verbose"])
+@patch("registry_lib.cli.Registry")
+def test_cli_plugin_list_verbose(mock_registry):
+    """Test plugin list verbose command."""
+    mock_registry.return_value.data = {
+        "plugins": [
+            {
+                "id": "test",
+                "name": "Test",
+                "uuid": "12345678-1234-4234-8234-123456789abc",
+                "description": "Test plugin",
+                "git_url": "https://github.com/user/plugin",
+                "trust_level": "community",
+                "categories": ["metadata"],
+                "authors": ["Test Author"],
+                "added_at": "2025-01-01T00:00:00Z",
+                "updated_at": "2025-01-01T00:00:00Z",
+            }
+        ]
+    }
+
+    main()
+
+    # Should print detailed info without errors
+
+
 @patch("sys.argv", ["registry", "--registry", "test.json", "blacklist", "list"])
 @patch("registry_lib.cli.Registry")
 def test_cli_blacklist_list(mock_registry):
