@@ -1,0 +1,113 @@
+"""Command-line interface."""
+
+import argparse
+import sys
+
+from registry_lib.blacklist import add_blacklist
+from registry_lib.plugin import add_plugin
+from registry_lib.registry import Registry
+
+
+def cmd_plugin_add(args):
+    """Add plugin to registry."""
+    registry = Registry(args.registry)
+    plugin = add_plugin(registry, args.url, args.trust, categories=args.categories, ref=args.ref)
+    registry.save()
+    print(f"Added plugin: {plugin['name']} ({plugin['id']})")
+
+
+def cmd_plugin_remove(args):
+    """Remove plugin from registry."""
+    registry = Registry(args.registry)
+    registry.remove_plugin(args.plugin_id)
+    registry.save()
+    print(f"Removed plugin: {args.plugin_id}")
+
+
+def cmd_plugin_list(args):
+    """List plugins in registry."""
+    registry = Registry(args.registry)
+    for plugin in registry.data["plugins"]:
+        print(f"{plugin['id']}: {plugin['name']} ({plugin['trust_level']})")
+
+
+def cmd_blacklist_add(args):
+    """Add URL to blacklist."""
+    registry = Registry(args.registry)
+    add_blacklist(registry, args.url, args.reason)
+    registry.save()
+    print(f"Blacklisted: {args.url}")
+
+
+def cmd_blacklist_remove(args):
+    """Remove URL from blacklist."""
+    registry = Registry(args.registry)
+    registry.remove_blacklist(args.url)
+    registry.save()
+    print(f"Removed from blacklist: {args.url}")
+
+
+def cmd_blacklist_list(args):
+    """List blacklisted URLs."""
+    registry = Registry(args.registry)
+    for entry in registry.data["blacklist"]:
+        print(f"{entry['url']}: {entry['reason']}")
+
+
+def main():
+    """Main CLI entry point."""
+    parser = argparse.ArgumentParser(description="Picard plugins registry maintenance tool")
+    parser.add_argument("--registry", default="plugins.json", help="Path to registry file")
+
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # Plugin commands
+    plugin_parser = subparsers.add_parser("plugin", help="Plugin operations")
+    plugin_subparsers = plugin_parser.add_subparsers(dest="plugin_command", required=True)
+
+    # plugin add
+    add_parser = plugin_subparsers.add_parser("add", help="Add plugin")
+    add_parser.add_argument("url", help="Git repository URL")
+    add_parser.add_argument("--trust", required=True, choices=["official", "trusted", "community"], help="Trust level")
+    add_parser.add_argument("--categories", nargs="+", help="Plugin categories")
+    add_parser.add_argument("--ref", default="main", help="Git ref (default: main)")
+    add_parser.set_defaults(func=cmd_plugin_add)
+
+    # plugin remove
+    remove_parser = plugin_subparsers.add_parser("remove", help="Remove plugin")
+    remove_parser.add_argument("plugin_id", help="Plugin ID")
+    remove_parser.set_defaults(func=cmd_plugin_remove)
+
+    # plugin list
+    list_parser = plugin_subparsers.add_parser("list", help="List plugins")
+    list_parser.set_defaults(func=cmd_plugin_list)
+
+    # Blacklist commands
+    blacklist_parser = subparsers.add_parser("blacklist", help="Blacklist operations")
+    blacklist_subparsers = blacklist_parser.add_subparsers(dest="blacklist_command", required=True)
+
+    # blacklist add
+    bl_add_parser = blacklist_subparsers.add_parser("add", help="Add to blacklist")
+    bl_add_parser.add_argument("url", help="Git URL or pattern")
+    bl_add_parser.add_argument("--reason", required=True, help="Reason for blacklisting")
+    bl_add_parser.set_defaults(func=cmd_blacklist_add)
+
+    # blacklist remove
+    bl_remove_parser = blacklist_subparsers.add_parser("remove", help="Remove from blacklist")
+    bl_remove_parser.add_argument("url", help="Git URL")
+    bl_remove_parser.set_defaults(func=cmd_blacklist_remove)
+
+    # blacklist list
+    bl_list_parser = blacklist_subparsers.add_parser("list", help="List blacklist")
+    bl_list_parser.set_defaults(func=cmd_blacklist_list)
+
+    args = parser.parse_args()
+    try:
+        args.func(args)
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
