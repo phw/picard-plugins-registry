@@ -69,24 +69,37 @@ def cmd_stats(args):
 
 
 def cmd_plugin_redirect(args):
-    """Add redirect for plugin that moved URLs."""
+    """Add or remove redirect for plugin that moved URLs."""
     registry = Registry(args.registry)
     plugin = registry.find_plugin(args.plugin_id)
     if not plugin:
         print(f"Error: Plugin {args.plugin_id} not found", file=sys.stderr)
         sys.exit(1)
 
-    # Initialize redirect_from if not present
-    if 'redirect_from' not in plugin:
-        plugin['redirect_from'] = []
+    if args.remove:
+        # Remove URL from redirect_from
+        if 'redirect_from' in plugin and args.old_url in plugin['redirect_from']:
+            plugin['redirect_from'].remove(args.old_url)
+            if not plugin['redirect_from']:
+                del plugin['redirect_from']
+            plugin["updated_at"] = now_iso8601()
+            registry.save()
+            print(f"Removed redirect: {args.old_url}")
+        else:
+            print(f"Error: Redirect {args.old_url} not found", file=sys.stderr)
+            sys.exit(1)
+    else:
+        # Initialize redirect_from if not present
+        if 'redirect_from' not in plugin:
+            plugin['redirect_from'] = []
 
-    # Add old URL to redirect_from
-    if args.old_url not in plugin['redirect_from']:
-        plugin['redirect_from'].append(args.old_url)
+        # Add old URL to redirect_from
+        if args.old_url not in plugin['redirect_from']:
+            plugin['redirect_from'].append(args.old_url)
 
-    plugin["updated_at"] = now_iso8601()
-    registry.save()
-    print(f"Added redirect: {args.old_url} -> {plugin['git_url']}")
+        plugin["updated_at"] = now_iso8601()
+        registry.save()
+        print(f"Added redirect: {args.old_url} -> {plugin['git_url']}")
 
 
 def cmd_plugin_edit(args):
@@ -232,6 +245,7 @@ def main():
     redirect_parser = plugin_subparsers.add_parser("redirect", help="Add URL redirect for moved plugin")
     redirect_parser.add_argument("plugin_id", help="Plugin ID")
     redirect_parser.add_argument("old_url", help="Old git URL to redirect from")
+    redirect_parser.add_argument("--remove", action="store_true", help="Remove redirect instead of adding")
     redirect_parser.set_defaults(func=cmd_plugin_redirect)
 
     # plugin remove

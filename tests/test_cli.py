@@ -67,6 +67,24 @@ def test_cli_plugin_redirect(mock_registry):
     mock_registry.return_value.save.assert_called_once()
 
 
+@patch("sys.argv", ["registry", "plugin", "redirect", "test-plugin", "https://github.com/old/url", "--remove"])
+@patch("registry_lib.cli.Registry")
+def test_cli_plugin_redirect_remove(mock_registry):
+    """Test plugin redirect remove command."""
+    mock_plugin = {
+        "id": "test-plugin",
+        "name": "Test Plugin",
+        "git_url": "https://github.com/new/url",
+        "redirect_from": ["https://github.com/old/url"],
+    }
+    mock_registry.return_value.find_plugin.return_value = mock_plugin
+
+    main()
+
+    assert "redirect_from" not in mock_plugin
+    mock_registry.return_value.save.assert_called_once()
+
+
 @patch("sys.argv", ["registry", "validate"])
 @patch("registry_lib.cli.Registry")
 def test_cli_validate(mock_registry):
