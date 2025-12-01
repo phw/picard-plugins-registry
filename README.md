@@ -23,23 +23,23 @@ uv sync
 # Install pre-commit hooks
 uv run pre-commit install
 
-# Activate virtual environment (optional - allows running `registry` directly)
+# Activate virtual environment
 source .venv/bin/activate
 ```
 
-**Note:** After activating the virtual environment, you can run `registry` directly instead of `uv run registry`.
+**Note:** After activating the virtual environment with `source .venv/bin/activate`, you can run `registry` commands directly. All examples below assume the virtual environment is activated. If not activated, prefix commands with `uv run` (e.g., `uv run registry plugin list`).
 
 ## Usage
 
 ### Add a Plugin
 
 ```bash
-uv run registry plugin add https://github.com/user/plugin-name \
+registry plugin add https://github.com/user/plugin-name \
     --trust community \
     --categories metadata,coverart
 
 # With custom git ref
-uv run registry plugin add https://github.com/user/plugin-name \
+registry plugin add https://github.com/user/plugin-name \
     --trust community \
     --ref develop
 ```
@@ -49,20 +49,20 @@ uv run registry plugin add https://github.com/user/plugin-name \
 Refresh plugin metadata from MANIFEST.toml:
 
 ```bash
-uv run registry plugin update plugin-id
+registry plugin update plugin-id
 ```
 
 ### Edit a Plugin
 
 ```bash
 # Change trust level
-uv run registry plugin edit plugin-id --trust official
+registry plugin edit plugin-id --trust official
 
 # Change categories
-uv run registry plugin edit plugin-id --categories metadata,ui
+registry plugin edit plugin-id --categories metadata,ui
 
 # Change both
-uv run registry plugin edit plugin-id --trust trusted --categories metadata
+registry plugin edit plugin-id --trust trusted --categories metadata
 ```
 
 ### Add URL Redirect
@@ -71,51 +71,51 @@ When a plugin moves to a new repository URL, add a redirect so users with the ol
 
 ```bash
 # Add redirect
-uv run registry plugin redirect plugin-id https://github.com/olduser/old-repo
+registry plugin redirect plugin-id https://github.com/olduser/old-repo
 
 # Remove redirect
-uv run registry plugin redirect plugin-id https://github.com/olduser/old-repo --remove
+registry plugin redirect plugin-id https://github.com/olduser/old-repo --remove
 ```
 
 ### List Plugins
 
 ```bash
 # Compact list
-uv run registry plugin list
+registry plugin list
 
 # Detailed list (shows all plugin information)
-uv run registry plugin list --verbose
+registry plugin list --verbose
 ```
 
 ### Show Plugin Details
 
 ```bash
-uv run registry plugin show plugin-id
+registry plugin show plugin-id
 ```
 
 ### Remove a Plugin
 
 ```bash
-uv run registry plugin remove plugin-id
+registry plugin remove plugin-id
 ```
 
 ### Blacklist a Plugin
 
 ```bash
 # Blacklist by URL
-uv run registry blacklist add --url https://github.com/bad/plugin \
+registry blacklist add --url https://github.com/bad/plugin \
     --reason "Contains malicious code"
 
 # Blacklist by UUID (recommended - blocks plugin at all URLs)
-uv run registry blacklist add --uuid 12345678-1234-4234-8234-123456789abc \
+registry blacklist add --uuid 12345678-1234-4234-8234-123456789abc \
     --reason "Malicious plugin"
 
 # Blacklist by URL regex (entire organization)
-uv run registry blacklist add --url-regex "^https://github\\.com/badorg/.*" \
+registry blacklist add --url-regex "^https://github\\.com/badorg/.*" \
     --reason "Compromised account"
 
 # Blacklist specific fork (UUID + URL combination)
-uv run registry blacklist add \
+registry blacklist add \
     --uuid 12345678-1234-4234-8234-123456789abc \
     --url https://github.com/badactor/fork \
     --reason "Malicious fork of legitimate plugin"
@@ -125,16 +125,16 @@ uv run registry blacklist add \
 
 ```bash
 # Remove by URL
-uv run registry blacklist remove --url https://github.com/bad/plugin
+registry blacklist remove --url https://github.com/bad/plugin
 
 # Remove by UUID
-uv run registry blacklist remove --uuid 12345678-1234-4234-8234-123456789abc
+registry blacklist remove --uuid 12345678-1234-4234-8234-123456789abc
 ```
 
 ### List Blacklist
 
 ```bash
-uv run registry blacklist list
+registry blacklist list
 ```
 
 ### Validate Registry
@@ -142,7 +142,7 @@ uv run registry blacklist list
 Check registry integrity (duplicate IDs, UUIDs, URLs):
 
 ```bash
-uv run registry validate
+registry validate
 ```
 
 ### Show Statistics
@@ -150,7 +150,7 @@ uv run registry validate
 Display registry statistics by trust level and category:
 
 ```bash
-uv run registry stats
+registry stats
 ```
 
 ## Trust Levels
