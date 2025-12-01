@@ -1,12 +1,12 @@
 """Command-line interface."""
 
 import argparse
-from datetime import datetime, timezone
 import sys
 
 from registry_lib.blacklist import add_blacklist
 from registry_lib.plugin import add_plugin, update_plugin
 from registry_lib.registry import Registry
+from registry_lib.utils import now_iso8601
 
 
 def cmd_validate(args):
@@ -84,7 +84,7 @@ def cmd_plugin_redirect(args):
     if args.old_url not in plugin['redirect_from']:
         plugin['redirect_from'].append(args.old_url)
 
-    plugin["updated_at"] = datetime.now(timezone.utc).isoformat()
+    plugin["updated_at"] = now_iso8601()
     registry.save()
     print(f"Added redirect: {args.old_url} -> {plugin['git_url']}")
 
@@ -103,7 +103,7 @@ def cmd_plugin_edit(args):
     if args.categories:
         plugin["categories"] = args.categories.split(',')
 
-    plugin["updated_at"] = datetime.now(timezone.utc).isoformat()
+    plugin["updated_at"] = now_iso8601()
     registry.save()
     print(f"Updated plugin: {plugin['name']} ({plugin['id']})")
 

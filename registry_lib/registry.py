@@ -1,8 +1,9 @@
 """Registry management."""
 
 import json
-from datetime import datetime, timezone
 from pathlib import Path
+
+from registry_lib.utils import now_iso8601
 
 
 class Registry:
@@ -22,7 +23,7 @@ class Registry:
         if not self.path.exists():
             return {
                 "api_version": "3.0",
-                "last_updated": datetime.now(timezone.utc).isoformat(),
+                "last_updated": now_iso8601(),
                 "plugins": [],
                 "blacklist": [],
             }
@@ -31,7 +32,7 @@ class Registry:
 
     def save(self):
         """Save registry to file."""
-        self.data["last_updated"] = datetime.now(timezone.utc).isoformat()
+        self.data["last_updated"] = now_iso8601()
         with open(self.path, "w") as f:
             json.dump(self.data, f, indent=2, ensure_ascii=False)
             f.write("\n")

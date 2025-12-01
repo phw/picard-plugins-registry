@@ -1,6 +1,6 @@
 """Blacklist operations."""
 
-from datetime import datetime, timezone
+from registry_lib.utils import now_iso8601
 
 
 def add_blacklist(registry, url=None, uuid=None, url_regex=None, reason=None):
@@ -27,7 +27,7 @@ def add_blacklist(registry, url=None, uuid=None, url_regex=None, reason=None):
 
     entry = {
         "reason": reason,
-        "blacklisted_at": datetime.now(timezone.utc).isoformat(),
+        "blacklisted_at": now_iso8601(),
     }
 
     # Add identifiers

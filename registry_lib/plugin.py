@@ -1,10 +1,8 @@
 """Plugin operations."""
 
-from datetime import datetime, timezone
-
 from registry_lib.manifest import fetch_manifest, validate_manifest
 from registry_lib.picard.constants import REGISTRY_TRUST_LEVELS
-from registry_lib.utils import derive_plugin_id
+from registry_lib.utils import derive_plugin_id, now_iso8601
 
 
 def add_plugin(registry, git_url, trust_level, categories=None, ref="main"):
@@ -34,7 +32,7 @@ def add_plugin(registry, git_url, trust_level, categories=None, ref="main"):
     plugin_id = derive_plugin_id(git_url)
 
     # Build plugin entry
-    now = datetime.now(timezone.utc).isoformat()
+    now = now_iso8601()
     plugin = {
         "id": plugin_id,
         "uuid": manifest["uuid"],
@@ -93,7 +91,7 @@ def update_plugin(registry, plugin_id):
     plugin["name"] = manifest["name"]
     plugin["description"] = manifest["description"]
     plugin["authors"] = manifest.get("authors", [])
-    plugin["updated_at"] = datetime.now(timezone.utc).isoformat()
+    plugin["updated_at"] = now_iso8601()
 
     # Update optional fields
     if "maintainers" in manifest:
