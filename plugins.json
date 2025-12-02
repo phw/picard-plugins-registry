@@ -5,7 +5,7 @@
       "id": "additional-artists-details",
       "uuid": "81fd1f5f-f723-498f-a82e-17fb4163c83a",
       "name": "Additional Artists Details",
-      "description": "This plugin provides specialized album and track variables with artist details for use in tagging and naming scripts.\n",
+      "description": "This plugin provides specialized album and track variables with artist details for use in tagging and naming scripts.",
       "git_url": "https://github.com/rdswift/picard-plugin-additional-artists-details",
       "categories": [
         "metadata"
@@ -15,7 +15,16 @@
         "Bob Swift"
       ],
       "added_at": "2025-12-01T11:16:37Z",
-      "updated_at": "2025-12-01T11:30:04Z"
+      "updated_at": "2025-12-02T21:36:08Z",
+      "name_i18n": {
+        "de": "Weitere Details zu den Künstlern",
+        "fr": "Détails supplémentaires sur les artistes"
+      },
+      "description_i18n": {
+        "de": "Dieses Plugin stellt spezielle Album- und Titelvariablen mit Künstlerinformationen zur Verwendung in Tagging- und Benennungsskripten bereit.",
+        "fr": "Ce plugin fournit des variables spécialisées pour les albums et les pistes, avec des informations sur les artistes, à utiliser dans les scripts de balisage et de nommage."
+      },
+      "versioning_scheme": "semver"
     },
     {
       "id": "additional-artists-variables",
