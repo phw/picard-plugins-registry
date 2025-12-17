@@ -2,6 +2,7 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+      - id: check-toml
       - id: check-yaml
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -19,5 +20,11 @@ repos:
         entry: uv run pytest
         language: python
         types: [python]
+        pass_filenames: false
+        always_run: true
+      - id: registry-validate
+        name: Validate plugins registry
+        entry: uv run registry validate
+        language: system
         pass_filenames: false
         always_run: true
