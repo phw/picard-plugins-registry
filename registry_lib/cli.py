@@ -346,6 +346,14 @@ def cmd_plugin_update(args):
     print(f"Updated plugin: {plugin['name']} ({plugin['id']})")
 
 
+def cmd_plugin_update_all(args):
+    registry = Registry(args.registry)
+    for plugin in registry.data["plugins"]:
+        plugin = update_plugin(registry, plugin["id"])
+    registry.save()
+    print(f"Updated plugin: {len(registry.data['plugins'])} plugins")
+
+
 def cmd_plugin_remove(args):
     """Remove plugin from registry."""
     registry = Registry(args.registry)
@@ -514,6 +522,10 @@ def main():
     update_parser.add_argument("plugin_id", help="Plugin ID")
     update_parser.add_argument("--ref", help="Git ref to fetch MANIFEST from (default: first ref or main)")
     update_parser.set_defaults(func=cmd_plugin_update)
+
+    # plugin update-all
+    update_all_parser = plugin_subparsers.add_parser("update-all", help="Update metadata for all plugins in registry")
+    update_all_parser.set_defaults(func=cmd_plugin_update_all)
 
     # plugin edit
     edit_parser = plugin_subparsers.add_parser("edit", help="Edit plugin")
