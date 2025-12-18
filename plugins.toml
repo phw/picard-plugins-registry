@@ -213,7 +213,7 @@ de = "Werk und Satz anhand von Werkbeziehungen setzen."
 id = "xqaf"
 uuid = "88a16689-663b-4d78-bc1c-2fd7698e51b0"
 name = "XQAF"
-description = "Support for the XQAF and QOA audio file formats"
+description = "Support for the XQAF and QOA audio files"
 git_url = "https://git.sr.ht/~phw/picard-plugin-xqaf"
 categories = [
   "formats",
@@ -223,5 +223,8 @@ authors = [
   "Philipp Wolfer",
 ]
 added_at = "2025-12-05T20:01:04Z"
-updated_at = "2025-12-08T07:50:13Z"
+updated_at = "2025-12-18T06:29:07Z"
 versioning_scheme = "semver"
+
+[plugins.description_i18n]
+de = "Unterstützung für XQAF- und QOA-Audiodateien"
