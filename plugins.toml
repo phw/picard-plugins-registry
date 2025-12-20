@@ -122,9 +122,10 @@ git_url = "https://github.com/rdswift/picard-plugin-format-performer-tags"
 categories = [
   "metadata",
 ]
-trust_level = "community"
+trust_level = "trusted"
 authors = [
-  "Bob Swift, Philipp Wolfer",
+  "Bob Swift",
+  "Philipp Wolfer",
 ]
 added_at = "2025-12-17T22:36:05Z"
 updated_at = "2025-12-17T22:40:09Z"
