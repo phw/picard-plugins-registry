@@ -171,6 +171,23 @@ updated_at = "2025-12-18T16:56:18Z"
 versioning_scheme = "semver"
 
 [[plugins]]
+id = "losslessfuncs"
+uuid = "2bc76f6c-464f-4565-b1ac-1dbaab6113ab"
+name = "Tagger script functions $is_lossless() and $is_lossy()"
+description = "Tagger script functions to detect if a file is lossless or lossy"
+git_url = "https://git.sr.ht/~phw/picard-plugin-losslessfuncs"
+categories = [
+  "scripting",
+]
+trust_level = "trusted"
+authors = [
+  "Philipp Wolfer",
+]
+added_at = "2025-12-20T14:24:01Z"
+updated_at = "2025-12-20T14:24:01Z"
+versioning_scheme = "semver"
+
+[[plugins]]
 id = "mod"
 uuid = "2e8596ef-0ee2-444b-b69b-92463c09f22b"
 name = "MOD files"
