@@ -76,6 +76,23 @@ de = "Dieses Plugin fasst alle Performer-Tags in einer Mehrwertvariablen `%_perf
 fr = "Ce plugin combine toutes les balises performer dans une variable à valeurs multiples `%_performers%`."
 
 [[plugins]]
+id = "decade"
+uuid = "1e6f5357-bbfb-4575-82fe-40706708af76"
+name = "Decade function"
+description = "Add a $decade(date) scripting function to get the decade from a year"
+git_url = "https://git.sr.ht/~phw/picard-plugin-decade"
+categories = [
+  "scripting",
+]
+trust_level = "trusted"
+authors = [
+  "Philipp Wolfer",
+]
+added_at = "2025-12-20T16:31:47Z"
+updated_at = "2025-12-20T16:31:47Z"
+versioning_scheme = "semver"
+
+[[plugins]]
 id = "fanarttv"
 uuid = "d80f6f27-b141-438a-b644-fffb752e0ba2"
 name = "fanart.tv cover art"
