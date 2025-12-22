@@ -309,6 +309,24 @@ updated_at = "2025-12-20T21:22:24Z"
 versioning_scheme = "semver"
 
 [[plugins]]
+id = "submit-isrc"
+uuid = "bbaa987c-8ebf-412f-af6f-70c79e63bb51"
+name = "Submit ISRC"
+description = "Adds a right click option on an album to submit the ISRCs to the MusicBrainz server specified in the Options."
+git_url = "https://github.com/rdswift/picard-plugin-submit-isrc"
+categories = [
+  "metadata",
+  "other",
+]
+trust_level = "trusted"
+authors = [
+  "Bob Swift",
+]
+added_at = "2025-12-22T21:11:44Z"
+updated_at = "2025-12-22T21:11:44Z"
+versioning_scheme = "semver"
+
+[[plugins]]
 id = "theaudiodb"
 uuid = "ed113c88-25af-4e35-b046-993226cdd46a"
 name = "TheAudioDB cover art"
