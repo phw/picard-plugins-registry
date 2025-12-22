@@ -330,21 +330,24 @@ id = "view-script-variables"
 uuid = "62e2a3fd-f4df-4b53-abc5-b73d2a36b672"
 name = "View script variables"
 description = "Display a dialog box listing the metadata tags and variables for the track / file."
-git_url = "https://github.com/rdswift/picard-plugin-view-script-variables"
+git_url = "https://github.com/metabrainz/picard-plugin-view-script-variables"
 categories = [
   "metadata",
   "ui",
 ]
-trust_level = "trusted"
+trust_level = "official"
 authors = [
   "Sophist",
 ]
 added_at = "2025-12-03T23:44:25Z"
-updated_at = "2025-12-03T23:44:25Z"
+updated_at = "2025-12-22T18:12:02Z"
 maintainers = [
-  "Bob Swift",
+  "MusicBrainz Picard Team",
 ]
 versioning_scheme = "semver"
+redirect_from = [
+  "https://github.com/rdswift/picard-plugin-view-script-variables",
+]
 
 [plugins.name_i18n]
 de = "Script-Variablen anzeigen"
