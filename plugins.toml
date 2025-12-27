@@ -171,6 +171,23 @@ updated_at = "2025-12-20T03:41:24Z"
 versioning_scheme = "semver"
 
 [[plugins]]
+id = "label-variables"
+uuid = "d63dfdbf-b2cc-446c-9f42-fb0e69213e6b"
+name = "Label Variables"
+description = "This plugin provides variables containing label information for a release for use in user or file naming scripts."
+git_url = "https://github.com/rdswift/picard-plugin-label-variables"
+categories = [
+  "metadata",
+]
+trust_level = "trusted"
+authors = [
+  "Bob Swift",
+]
+added_at = "2025-12-27T01:44:31Z"
+updated_at = "2025-12-27T01:44:31Z"
+versioning_scheme = "semver"
+
+[[plugins]]
 id = "loadasnat"
 uuid = "263cb3c3-2c44-4f31-9bc9-72010ffc1725"
 name = "Load as standalone recording"
